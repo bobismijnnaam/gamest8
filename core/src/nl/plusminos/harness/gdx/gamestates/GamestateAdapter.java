@@ -1,25 +1,14 @@
 package nl.plusminos.harness.gdx.gamestates;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class GamestateAdapter implements Gamestate {
-	
-	protected Camera camera;
-	protected SpriteBatch batch;
 	
 	// Game functions
 	
 	@Override
 	public boolean isTransparent() {
 		return false;
-	}
-	
-	@Override
-	public void setResources(Camera camera, SpriteBatch batch) {
-		this.camera = camera;
-		this.batch = batch;
 	}
 
 	@Override

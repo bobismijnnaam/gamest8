@@ -7,10 +7,7 @@ import java.util.Map.Entry;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 
 // TODO: Shader support
@@ -30,17 +27,6 @@ public class GamestateManager implements ApplicationListener {
 	private ArrayList<Gamestate> stateStack = new ArrayList<Gamestate>(); // Stack of states
 	private HashMap<String, Gamestate> stateRepo = new HashMap<String, Gamestate>(); // All added states are saved here
 	
-	private SpriteBatch batch; // Shared spritebatch
-	private Camera camera; // Shared camera
-	
-	/**
-	 * Initializes the GamestateManager with a standard spritebatch and an orthographic camera
-	 * See {@link #GamestateManager(float, SpriteBatch, Camera, Gamestate...)}
-	 */
-	public GamestateManager(float fixedTimestep, Gamestate...gamestates) {
-		this(fixedTimestep, new SpriteBatch(), new OrthographicCamera(), gamestates);
-	}
-	
 	/**
 	 * Initializes gamestate manager. At least one gamestate should be supplied. The first gamestate in the list
 	 * will be the starting state. To change this just make a call to {@link #setState(String)} afterwards.
@@ -49,7 +35,7 @@ public class GamestateManager implements ApplicationListener {
 	 * @param camera The camera to use
 	 * @param gamestates Initial gamestates you want to set. You can also do this later with addState()
 	 */
-	public GamestateManager(float fixedTimestep, SpriteBatch batch, Camera camera, Gamestate...gamestates) {
+	public GamestateManager(float fixedTimestep, Gamestate...gamestates) {
 		if (instance == null) {
 			// Set timestep
 			this.fixedTimestep = fixedTimestep;
@@ -58,10 +44,6 @@ public class GamestateManager implements ApplicationListener {
 			for (Gamestate g : gamestates) {
 				stateRepo.put(g.getStateID(), g);
 			}
-			
-			// Set the shared camera & spritebatch
-			this.batch = batch;
-			this.camera = camera;
 			
 			// Check if enough states were added
 			if (gamestates.length == 0) {
@@ -83,20 +65,6 @@ public class GamestateManager implements ApplicationListener {
 		if (instance == null) throw new NullPointerException();
 		
 		return instance;
-	}
-	
-	/**
-	 * @return The shared camera
-	 */
-	public Camera getCamera() {
-		return camera;
-	}
-	
-	/**
-	 * @return The shared spritebatch
-	 */
-	public SpriteBatch getSpriteBatch() {
-		return batch;
 	}
 	
 	/**
@@ -169,7 +137,6 @@ public class GamestateManager implements ApplicationListener {
 				
 				// Add the new state & initialize it
 				stateStack.add(startGamestate.instantiate());
-				getState().setResources(camera, batch);
 				getState().create();
 				
 				// Set the input to that state
@@ -192,7 +159,6 @@ public class GamestateManager implements ApplicationListener {
 				
 				// Add the new state on top of the stack and initialize it
 				stateStack.add(newStateInstance.instantiate());
-				getState().setResources(camera, batch);
 				getState().create();
 				
 				// Set input to the current state
@@ -271,16 +237,9 @@ public class GamestateManager implements ApplicationListener {
 	@Override
 	public void render() {
 		// Clear the screen.
-		// Not sure if this is the right place, the user might want to retain background?
-		// Atm I consider that harmful, and if the user really wanted to do that he could
-		// use a framebuffer. But it also might be more flexible to leave this part out.
-		// Anyhow: TODO
+		// If user wants to retain graphics he can use a framebuffer of some sort
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		// Initialize spritebatch
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
 		
 		if (fixedTimestep == 0) { // If timestep is variable just execute logic & render as often as possible
 			// Run the current gamestate's logic loop with variable timestep
@@ -334,9 +293,6 @@ public class GamestateManager implements ApplicationListener {
 				stateStack.get(i).render();
 			}
 		}
-		
-		// Close the batch
-		batch.end();
 	}
 	
 	/**

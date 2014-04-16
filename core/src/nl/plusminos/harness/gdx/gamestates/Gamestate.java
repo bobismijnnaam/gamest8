@@ -2,8 +2,6 @@ package nl.plusminos.harness.gdx.gamestates;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 
 public interface Gamestate extends ApplicationListener, InputProcessor, GestureListener {
@@ -22,13 +20,6 @@ public interface Gamestate extends ApplicationListener, InputProcessor, GestureL
 	 * @return The ID of the state
 	 */
 	public String getStateID();
-	
-	/**
-	 * Set the camera and batch to use
-	 * @param camera
-	 * @param batch
-	 */
-	public void setResources(Camera camera, SpriteBatch batch);
 	
 	/**
 	 * Returns whether or not the next state on the stack should be drawn or not

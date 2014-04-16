@@ -1,16 +1,20 @@
 package nl.plusminos.gdx.gamestates;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-
 import nl.plusminos.harness.gdx.gamestates.Gamestate;
 import nl.plusminos.harness.gdx.gamestates.GamestateAdapter;
 import nl.plusminos.harness.gdx.gamestates.GamestateManager;
 
-public class One extends GamestateAdapter {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
+public class One extends GamestateAdapter {
+	
+	private OrthographicCamera camera;
+	
 	@Override
 	public Gamestate instantiate() {
 		return new One();
@@ -21,9 +25,14 @@ public class One extends GamestateAdapter {
 		return "one";
 	}
 	
+	public void create() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+	
 	public void render() {
 		// Draw the map
-		Main.drawMap();
+		Main.drawMap(camera);
 		
 		// Draw the player position
 		ShapeRenderer shape = new ShapeRenderer();

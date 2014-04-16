@@ -3,7 +3,6 @@ package nl.plusminos.gdx.gamestates;
 import nl.plusminos.harness.gdx.gamestates.GamestateManager;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -15,13 +14,8 @@ public class GameStates extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
-		// Make shared spritebatch and camera
-		batch = new SpriteBatch();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
 		// Create Gamestatemanager with a framerate of 60
-		gm = new GamestateManager(1/60.0f, batch, camera, new Main());
+		gm = new GamestateManager(1/60.0f, new Main());
 		
 		// Add each individual gamestate
 		gm.addState(new One());

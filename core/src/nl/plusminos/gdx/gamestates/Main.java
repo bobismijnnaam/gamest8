@@ -4,12 +4,17 @@ import nl.plusminos.harness.gdx.gamestates.Gamestate;
 import nl.plusminos.harness.gdx.gamestates.GamestateAdapter;
 import nl.plusminos.harness.gdx.gamestates.GamestateManager;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class Main extends GamestateAdapter {
+
+	private OrthographicCamera camera;
 
 	@Override
 	public Gamestate instantiate() {
@@ -21,10 +26,15 @@ public class Main extends GamestateAdapter {
 		return "main";
 	}
 	
-	public static void drawMap() {
+	public void create() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+	
+	public static void drawMap(Camera camera) {
 		ShapeRenderer shape = new ShapeRenderer();
 		
-		shape.setProjectionMatrix(GamestateManager.get().getCamera().combined);
+		shape.setProjectionMatrix(camera.combined);
 		
 		shape.begin(ShapeType.Filled);
 		
@@ -38,7 +48,7 @@ public class Main extends GamestateAdapter {
 	
 	public void render() {
 		// Draw the map
-		drawMap();
+		drawMap(camera);
 		
 		// Draw the player position
 		ShapeRenderer shape = new ShapeRenderer();

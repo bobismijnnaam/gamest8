@@ -8,11 +8,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class Inventory extends GamestateAdapter {
 
+	private OrthographicCamera camera;
+	
 	@Override
 	public Gamestate instantiate() {
 		return new Inventory();
@@ -26,6 +29,11 @@ public class Inventory extends GamestateAdapter {
 	@Override
 	public boolean isTransparent() {
 		return true;
+	}
+	
+	public void create() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 	
 	public void render() {
